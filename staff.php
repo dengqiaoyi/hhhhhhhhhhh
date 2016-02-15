@@ -1,21 +1,27 @@
-<html>
-    <head><title>staff</title></head>
-    <body>
+<?php session_start();
+
+?>
 <?php
-session_start();
+
 //session check password
 $PW=123;
 $password=$_POST['password'];
-$_SESSION['password']=$password;
 
 if($password==$PW){
-    header("Location:http://1.dqy123.applinzi.com/staffFunction.php");
-    exit();
+    // header("Location:http://1.dqy123.applinzi.com/staffFunction.php");
+    //exit();
+    $_SESSION['password']=true;
+    
+  
+    echo "<script>location.href='staffFunction.php';</script>";
+    
+    
 }
 
-else
-    echo"wrong password!";
 
+else
+{ echo"wrong password! back.";
+
+    echo "<script>location.href='index.php';</script>";
+}
 ?>
-    </body>
-</html>
