@@ -1,3 +1,6 @@
+<?php session_start();
+
+?>
 
 <html>
     <head>
@@ -5,117 +8,165 @@
         <title>chat room</title><head>
         <body>
 
-            <body style="text-align:center">
+            <?php
 
-            
-                <form action="<?php echo $_SERVER['PHP_SELF'];?>" method="GET">
-                  
-                    
-                     <br /> <br />
-                    <input type="text" name="ID" />         
-   
-                    <input type="submit" value="delete">
-                    
-                </form>
-                <?php
+if(isset($_SESSION['password'])&&$_SESSION['password'])
+  
+
+{
 
 
-//Delete
-//conect to mysql
 
 $con = mysql_connect(SAE_MYSQL_HOST_M.':'.SAE_MYSQL_PORT, SAE_MYSQL_USER, SAE_MYSQL_PASS);
 
-//define('DB_HOST',$_SERVER['HTTP_MYSQLPORT'].'.mysql.sae.sina.com.cn:'.$_SERVER['HTTP_MYSQLPORT']);
 
-//$con=mysql_connect(DB_HOST,DB_USER,DB_PASSWORD);
-
-//$con = mysql_connect(tlsxmgekjhof.rds.sae.sina.com.cn \18841,"ddddd1","123456");
 if (!$con)
   {
   die('Could not connect to saeMysql: ' . mysql_error());
   }
 
-//creat a DB
-if (mysql_query("CREATE DATABASE my_db",$con))
+else{
+     	$mydb=mysql_select_db("app_dqy123",$con);
+    
+  	if(!$mydb)
+   		echo "DB is not created";
+    else 
+    {
+        echo"current content :<br/>enter NO. to delete<br/>";
+        $result = mysql_query("SELECT * FROM chat");
+
+while($row = mysql_fetch_array($result))
   {
-  echo "Database created";
-  }
-else
+    echo"NO.". $row['number'] . " " .":". $row['content'];
+  echo "<br />";
+    }
+ 
+}
+
+
+
+//Delete
+//conect to mysql
+$con = mysql_connect(SAE_MYSQL_HOST_M.':'.SAE_MYSQL_PORT, SAE_MYSQL_USER, SAE_MYSQL_PASS);
+
+
+if (!$con)
   {
-  echo "Error creating database: " . mysql_error();
+  die('Could not connect to saeMysql: ' . mysql_error());
   }
 
-//table
-mysql_select_db("my_db", $con);
+else{
+     	$mydb=mysql_select_db("app_dqy123",$con);
+    
+  	if(!$mydb)
+   		echo "DB is not created";
+ 
+}
+ 
 
-$sql="CREATE TABLE chat (content varchar(100))";
-
-mysql_query($sql,$con);
 
 
 //open and delete
 
-mysql_select_db("my_db", $con);
-
-$sql = "delete from user where id='$ID' limit 1";
-if (mysql_query($sql)) {
-    echo 'deleted.';
-}
+$mydb=mysql_select_db("app_dqy123",$con);
 
 
-//create cookie
+mysql_query("DELETE FROM chat WHERE number='$_POST[num]'");
 
-
-
-?>
-                
-                <form action="<?php echo $_SERVER['PHP_SELF'];?>" method="GET" >
-                   
-                     <br /> <br />
-    
-                     Enter cookie value:
-                     <br /> <br />
-                    <input type="text" name="value" />         
+     echo"<h3><a href='staffFunction.php'>show  database after operate</a></h3>";
    
-                    <br /> <br />
-                    <input type="submit" value="Create cookie" >
-                </form>
-                
-                <?php
-
-setcookie("test",$value，time()+3600);
-if (isset($_COOKIE['test'])) {
-    echo 'success';
 }
-
- //访客怎么获取到这个cookie啊= =b         
-//在访客发东西前加入判断？输入cookie的value，判断是否存在？有这么厉害的函数吗，好奇怪啊，cookie不是用来保存自己的东西的吗，这个管理员在这里添加来添加去  麻麻我好凌乱
-//这个增的功能，这个不是提交了那边就出来了吗
-//这个封禁功能，我的理解是提前挂了他的cookie,时限改成负数嘛
-
-
-
-?>
-                        
-            <form action="<?php echo $_SERVER['PHP_SELF'];?>" method="GET" >
-                   
-                     <br /> <br />
     
-                     Enter cookie value:
-                     <br /> <br />
-                    <input type="text" name="value" />         
-   
-                    <br /> <br />
-                    <input type="submit" value="make this cookie die" >
-                </form>
-                
-                <?php
-
-setcookie("test",$value，time()-1);
-if (!isset($_COOKIE['test'])) {
-    echo 'success';
 }
-?>
 
+else{
+    echo "no right". $_SESSION['views'];
+     echo "<script>location.href='index.php';</script>";
+    
+    
+}
+
+
+
+           //block
+//conect to mysql
+$con = mysql_connect(SAE_MYSQL_HOST_M.':'.SAE_MYSQL_PORT, SAE_MYSQL_USER, SAE_MYSQL_PASS);
+
+
+if (!$con)
+  {
+  die('Could not connect to saeMysql: ' . mysql_error());
+  }
+
+else{
+     	$mydb=mysql_select_db("app_dqy123",$con);
+    
+  	if(!$mydb)
+   		echo "DB is not created";
+ 
+}
+ 
+
+
+
+//open and block
+
+$mydb=mysql_select_db("app_dqy123",$con);
+
+$id=$POST['id'];
+mysql_query("UPDATE cookieDB SET flag = '0'
+WHERE id = '$id'");
+
+
+//set cookie number
+$GLOBALS["cookieNum"]=$_POST[cookieNum];
+ 
+
+
+
+            ?>
+        
+         
+                <form action="<?php echo $_SERVER['PHP_SELF'];?>" method="POST">
+                  
+                    
+                     <br /> <br />
+                    <input type="text" name="num" />         
+   
+                    <input type="submit" value="delete">
+                    
+                </form>
+           
+
+                <form action="<?php echo $_SERVER['PHP_SELF'];?>" method="POST">
+                  
+                    
+                     <br /> <br />
+                     enter cookie number:
+                    <input type="text" name="cookieNum" />         
+   
+                    <input type="submit" value="cookies">
+                    
+                </form>
+            
+            
+
+          <form action="<?php echo $_SERVER['PHP_SELF'];?>" method="POST">
+                  
+                    
+                     <br /> <br />
+              enter cookie id:
+                    <input type="text" name="id" />         
+   
+                    <input type="submit" value="block">
+                    
+                </form>
+           <?php
+            echo"<h3><a href='index.php'>return </a></h3>";
+            ?>
+                
+            
+
+            
 </body>
     </html>
